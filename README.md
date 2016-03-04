@@ -54,8 +54,9 @@ More documentation in the file itself: [col2page.sh](col2page.sh)
 
 Wrapper around col2page.sh, that feeds a2ps and writes a file.
  * Input: single column of text (from the standard input)
- * Output: multi-column ''PS file'' where columns are grouped to form pages.
+ * Output: multi-column **PS file** where columns are grouped to form pages.
 
+Mandatory parameter: output filename.
 
 Example to quickly test it:
 ```
