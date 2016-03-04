@@ -6,4 +6,9 @@
 DIRECTIONS.org
 *.outdir
 *.pyc
+*.ps
 .*.sh
+
+_build
+_log
+*.native
