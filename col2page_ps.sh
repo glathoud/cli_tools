@@ -31,5 +31,4 @@ OUTPUT_FILE=$1
 LIPP=${2:-105} 
 COPP=$3
 
-./col2page.sh ${LIPP} ${COPP} | a2ps -L ${LIPP} -R -B --rows=1 --columns=1 -o ${OUTPUT_FILE}
-
+./col2page.sh ${LIPP} ${COPP} | a2ps --medium=A4 -L ${LIPP} -R -B --rows=1 --columns=1 -o ${OUTPUT_FILE}
