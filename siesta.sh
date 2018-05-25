@@ -6,6 +6,16 @@
 if [[ ($# -eq 1)  &&  ($1 -eq "-test") ]]
 then
     DESIRED="-s 8" # to test, we sleep only 8 seconds
+
+elif [[ ($# -eq 2)  &&  ($1 -eq "-til") ]]
+then
+    A=$(date +%s -d "today $2")
+    NOW=$(date +%s)
+    if (( $A < $NOW ))
+    then
+        A=$(date +%s -d "tomorrow $2")
+    fi
+    DESIRED="-t "$A
 else
     DESIRED="-t "$(date +%s -d "today 12:25")
 fi
