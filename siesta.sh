@@ -2,6 +2,19 @@
 
 MYNAME=$(basename $0)
 
+MSG="$MYNAME:\nWoke up earlier than expected!\n\nBTW my parent command was:\n$(ps -o comm= $PPID)"
+echo $MSG >&2
+if [ $(which zenity) ]
+then
+    zenity --info --text="$MSG"
+elif [ $(which xmessage) ]
+then
+    xmessage "$MSG"
+fi
+    
+exit 1
+
+
 # Inspired from:
 # https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
 
@@ -48,7 +61,7 @@ sleep 2
 
 if (( $(date +%s) < $DESIRED_DATE ))
 then
-    MSG="$MYNAME: Woke up earlier than expected!"
+    MSG="$MYNAME: Woke up earlier than expected! BTW my parent command is: $(ps -o comm= $PPID)"
     echo $MSG >&2
     if [ $(which zenity) ]
     then
