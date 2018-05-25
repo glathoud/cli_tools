@@ -48,7 +48,7 @@ sleep 2
 
 if (( $(date +%s) < $DESIRED_DATE ))
 then
-    MSG="$MYNAME:\nWoke up earlier than expected!\n\nBTW my parent command was:\n$(ps -o comm= $PPID)"
+    MSG="$MYNAME:\nWoke up earlier than expected!\n\nBTW my parent command was:\n$(ps -o comm= $PPID)\n\n...and my parent tree was:\n$(pstree -s $PPID)"
     echo $MSG >&2
     if [ $(which zenity) ]
     then
