@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+MYNAME=$(basename $0)
+
 # Inspired from:
 # https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
 
@@ -15,9 +17,13 @@ then
     then
         A=$(date +%s -d "tomorrow $2")
     fi
-    DESIRED="-t "$A
+    DESIRED_DATE="$A"
 else
-    DESIRED="-t "$(date +%s -d "today 12:25")
+    DESIRED_DATE=$(date +%s -d "today 12:25")
+fi
+if [ "$DESIRED_DATE" ]
+then
+    DESIRED="-t $DESIRED_DATE"
 fi
 
 echo "$(basename $0): $DESIRED"
@@ -36,5 +42,12 @@ else
 fi
 
 # do it!
+sudo pkill rtcwake
 sudo rtcwake $RTCWAKE_OPT -m mem $DESIRED
 sleep 2
+
+if (( $(date +%s) < $DESIRED_DATE ))
+then
+    echo "$MYNAME: Woke up earlier than expected!"
+    exit 1
+fi
