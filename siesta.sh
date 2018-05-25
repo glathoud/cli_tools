@@ -48,6 +48,15 @@ sleep 2
 
 if (( $(date +%s) < $DESIRED_DATE ))
 then
-    echo "$MYNAME: Woke up earlier than expected!"
+    MSG="$MYNAME: Woke up earlier than expected!"
+    echo $MSG >&2
+    if [ $(which zenity) ]
+    then
+        zenity --info --text="$MSG"
+    elif [ $(which xmessage) ]
+    then
+        xmessage "$MSG"
+    fi
+        
     exit 1
 fi
