@@ -2,6 +2,21 @@
 
 MYNAME=$(basename $0)
 
+if ((1))
+then
+    MSG="$MYNAME:\nWoke up earlier than expected!\n\nParent:\n$(ps --no-headers -o command $PPID)"
+    echo $MSG >&2
+    if [ $(which zenity) ]
+    then
+        zenity --info --text="$MSG"
+    elif [ $(which xmessage) ]
+    then
+        xmessage "$MSG"
+    fi
+        
+    exit 1
+fi
+
 # Inspired from:
 # https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
 
@@ -48,7 +63,7 @@ sleep 2
 
 if (( $(date +%s) < $DESIRED_DATE ))
 then
-    MSG="$MYNAME:\nWoke up earlier than expected!"
+    MSG="$MYNAME:\nWoke up earlier than expected!\n\nParent:\n$(ps --no-headers -o command $PPID)"
     echo $MSG >&2
     if [ $(which zenity) ]
     then
