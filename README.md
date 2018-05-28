@@ -65,3 +65,7 @@ evince test.ps
 ```
 
 More documentation in the file itself: [col2page_ps.sh](col2page_ps.sh)
+
+### siesta.sh
+
+Lock the screen and put the computer to sleep for a while.

@@ -1,7 +1,40 @@
 #!/usr/bin/env bash
 
+# (1) try to lock the screen
+# (2) put the computer to sleep for a while, through `rtcwake`
+
 MYNAME=$(basename $0)
 
+# Inspired from:
+# https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
+
+### Read the options
+
+if [[ ($# -eq 1)  &&  ($1 -eq "-test") ]]
+then
+    DESIRED="-s 8" # to test, we sleep only 8 seconds
+
+elif [[ ($# -eq 2)  &&  ($1 -eq "-til") ]]
+then
+    A=$(date +%s -d "today $2")
+    NOW=$(date +%s)
+    if (( $A < $NOW ))
+    then
+        A=$(date +%s -d "tomorrow $2")
+    fi
+    DESIRED_DATE="$A"
+else
+    "$0" -test
+    exit $?
+fi
+if [ "$DESIRED_DATE" ]
+then
+    DESIRED="-t $DESIRED_DATE"
+fi
+
+echo "$(basename $0): $DESIRED"
+
+### Preparation
 
 LIGHT_LOCKER="light-locker"
 if [ "$(which $LIGHT_LOCKER)" ]
@@ -41,32 +74,6 @@ fi
 # Make sure we'll get root access before we (soon) lock the screen
 sudo echo > /dev/null
 
-# Inspired from:
-# https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
-
-if [[ ($# -eq 1)  &&  ($1 -eq "-test") ]]
-then
-    DESIRED="-s 8" # to test, we sleep only 8 seconds
-
-elif [[ ($# -eq 2)  &&  ($1 -eq "-til") ]]
-then
-    A=$(date +%s -d "today $2")
-    NOW=$(date +%s)
-    if (( $A < $NOW ))
-    then
-        A=$(date +%s -d "tomorrow $2")
-    fi
-    DESIRED_DATE="$A"
-else
-    "$0" -test
-    exit $?
-fi
-if [ "$DESIRED_DATE" ]
-then
-    DESIRED="-t $DESIRED_DATE"
-fi
-
-echo "$(basename $0): $DESIRED"
 
 # -l assumes hardware clock set to local time
 # -u assumes         ...           UTC   time
