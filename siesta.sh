@@ -2,6 +2,14 @@
 
 MYNAME=$(basename $0)
 
+LIGHT_LOCKER=$(which "light-locker")
+if [ $LIGHT_LOCKER ]; then
+    LIGHT_LOCKER_CMD=$(which "${LIGHT_LOCKER}-command")
+fi
+
+# Make sure we'll get root access before we (soon) lock the screen
+sudo echo > /dev/null
+
 # Inspired from:
 # https://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
 
@@ -19,7 +27,8 @@ then
     fi
     DESIRED_DATE="$A"
 else
-    DESIRED_DATE=$(date +%s -d "today 12:25")
+    "$0" -test
+    exit $?
 fi
 if [ "$DESIRED_DATE" ]
 then
@@ -39,6 +48,15 @@ then
     RTCWAKE_OPT="-l"
 else
     RTCWAKE_OPT="-u"
+fi
+
+# prepare locker if possible
+if [ "$LIGHT_LOCKER_CMD" ]
+then
+    pkill "$LIGHT_LOCKER"
+    pkill "$LIGHT_LOCKER_CMD"
+    $LIGHT_LOCKER & ( sleep 3 ; $LIGHT_LOCKER_CMD -l )
+    sleep 3
 fi
 
 # do it!
