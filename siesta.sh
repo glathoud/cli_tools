@@ -2,9 +2,40 @@
 
 MYNAME=$(basename $0)
 
-LIGHT_LOCKER=$(which "light-locker")
-if [ $LIGHT_LOCKER ]; then
-    LIGHT_LOCKER_CMD=$(which "${LIGHT_LOCKER}-command")
+
+LIGHT_LOCKER="light-locker"
+if [ "$(which $LIGHT_LOCKER)" ]
+then
+    # try to prepare for lock: guess who is having the xsession
+    #
+    # You have to run "light-locker" in the background with your X user
+    # (could not find a better way from within sudo)
+    #
+    # Practically, you can add the following line at the end of your .bashrc:
+    # if [ -z `pgrep light-locker` ]; then light-locker & fi
+    LLPID=$( pgrep "$LIGHT_LOCKER" )
+    if [ $LLPID ]
+    then
+        XUSER=$( ps -h -o user -fp $LLPID )
+        if [ $XUSER ]
+        then
+            LIGHT_LOCKER_CMD=$(which "${LIGHT_LOCKER}-command")
+        else
+            echo "$MYNAME: Unexpected error trying to determine the X user"
+            exit 1
+        fi
+    else
+        echo "$MYNAME: Could not find a light-locker process => won't lock" >&2
+        exit 1
+    fi
+fi
+
+### make sure we are root, because of rtcwake after screen lock
+
+if [ "root" != "$(whoami)" ]
+then
+    sudo $0 "$@"
+    exit
 fi
 
 # Make sure we'll get root access before we (soon) lock the screen
@@ -50,12 +81,10 @@ else
     RTCWAKE_OPT="-u"
 fi
 
-# prepare locker if possible
+# try to lock the screen
 if [ "$LIGHT_LOCKER_CMD" ]
 then
-    pkill "$LIGHT_LOCKER"
-    pkill "$LIGHT_LOCKER_CMD"
-    $LIGHT_LOCKER & ( sleep 3 ; $LIGHT_LOCKER_CMD -l )
+    su -c "$LIGHT_LOCKER_CMD -l" -l $XUSER
     sleep 3
 fi
 
