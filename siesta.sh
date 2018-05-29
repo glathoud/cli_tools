@@ -59,6 +59,8 @@ then
         fi
     else
         echo "$MYNAME: Could not find a light-locker process => won't lock" >&2
+        echo "$MYNAME: You could add the following line to your .bashrc :" >&2
+        echo "$MYNAME: if [ -z `pgrep light-locker` ]; then light-locker &>/dev/null & fi">&2
         exit 1
     fi
 fi
