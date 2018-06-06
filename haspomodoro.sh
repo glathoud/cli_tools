@@ -5,7 +5,7 @@ basename $0
 CURRENT=`ps aux | grep -E '\bpomodoro.sh\b'`
 if [ ! $CURRENT ]
 then
-    NOT="not "
+    NOT="NOT "
 fi
 
 MSG="pomodoro is ${NOT}running"

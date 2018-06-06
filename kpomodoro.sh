@@ -19,7 +19,7 @@ if [ "$PID_LIST" ]
 then
     PID_LIST=" (${PID_LIST})"
 else
-    NOT="not "
+    NOT="NOT "
 fi
     
 MSG="pomodoro was ${NOT}running${PID_LIST}"
