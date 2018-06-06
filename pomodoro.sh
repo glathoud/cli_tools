@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-sleep $(( 3*1 )) #25*60 ))
+sleep $(( 25*60 ))
 
 MSG="!\n"
 if [ "$(which zenity)" ]
