@@ -2,7 +2,7 @@
 
 if [ -z "$1" ]
 then
-    MSG="!"
+    MSG=`pwd`
 else
     MSG="$1"
 fi
