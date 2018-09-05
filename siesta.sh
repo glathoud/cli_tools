@@ -100,13 +100,18 @@ fi
 # do it!
 sudo pkill rtcwake
 sudo rtcwake $RTCWAKE_OPT -m mem $DESIRED
+date #xxx
 sleep 2
+date #xxx
 
 # try to refresh the clock
 # https://askubuntu.com/questions/254826/how-to-force-a-clock-update-using-ntp
+set -v
 sudo service ntp stop
 sudo ntpd -gq
 sudo service ntp start
+set +v
+date #xxx
 
 if (( $(date +%s) < $DESIRED_DATE ))
 then
