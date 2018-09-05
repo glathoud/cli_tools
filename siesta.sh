@@ -102,6 +102,12 @@ sudo pkill rtcwake
 sudo rtcwake $RTCWAKE_OPT -m mem $DESIRED
 sleep 2
 
+# try to refresh the clock
+# https://askubuntu.com/questions/254826/how-to-force-a-clock-update-using-ntp
+sudo service ntp stop
+sudo ntpd -gq
+sudo service ntp start
+
 if (( $(date +%s) < $DESIRED_DATE ))
 then
     MSG="$MYNAME:\nWoke up earlier than expected!\n\nParent:\n$(ps --no-headers -o command $PPID)"
