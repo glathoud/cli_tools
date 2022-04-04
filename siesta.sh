@@ -23,6 +23,31 @@ then
         A=$(date +%s -d "tomorrow $2")
     fi
     DESIRED_DATE="$A"
+
+elif [[ ($# -eq 3)  &&  ($1 -eq "-fromto") ]]
+     # -fromto <date_from> <date_to>
+     #
+     # IFF <date_now> between <date_from> and <date_to>, THEN sleep
+     # til <date_to>
+then
+    A=$(date +%s -d "today $2")
+    B=$(date +%s -d "today $3")
+    if (( $B < $A ))
+    then
+        B=$(date +%s -d "tomorrow $3")
+    fi
+    
+    NOW=$(date +%s)
+    if (( $A < $NOW ))
+    then
+        if (( $NOW < $B ))
+        then
+            DESIRED_DATE="$B"
+        else
+            exit 0  # no need to sleep
+        fi
+    fi
+
 else
     "$0" -test
     exit $?
