@@ -10,11 +10,11 @@ MYNAME=$(basename $0)
 
 ### Read the options
 
-if [[ ($# -eq 1)  &&  ($1 -eq "-test") ]]
+if [[ ($# -eq 1)  &&  ($1 == "-test") ]]
 then
     DESIRED="-s 8" # to test, we sleep only 8 seconds
 
-elif [[ ($# -eq 2)  &&  ($1 -eq "-til") ]]
+elif [[ ($# -eq 2)  &&  ($1 == "-til") ]]
 then
     A=$(date +%s -d "today $2")
     NOW=$(date +%s)
@@ -24,8 +24,11 @@ then
     fi
     DESIRED_DATE="$A"
 
-elif [[ ($# -eq 3)  &&  ($1 -eq "-fromto") ]]
+elif [[ ($# -eq 3)  &&  ($1 == "-fromto") ]]
      # -fromto <date_from> <date_to>
+     # 
+     # Example:
+     # -fromto 16:00 17:00
      #
      # IFF <date_now> between <date_from> and <date_to>, THEN sleep
      # til <date_to>
@@ -48,6 +51,37 @@ then
         fi
     fi
 
+elif [[ ($# -eq 3)  &&  ($1 == "-waitfromto") ]]
+     # -waitfromto <date_from> <date_to>
+     #
+     # IFF <date_now> between <date_from> and <date_to>, THEN *wait*
+     # til <date_to>
+     # 
+     # Example:
+     # -waitfromto 16:00 17:00
+     #
+     # same logic as in -fromto, but here we don't do any true
+     # siesta: we don't put the PC to sleep, we just wait using
+     # the... "sleep" command.
+then
+    A=$(date +%s -d "today $2")
+    B=$(date +%s -d "today $3")
+    if (( $B < $A ))
+    then
+        B=$(date +%s -d "tomorrow $3")
+    fi
+    
+    NOW=$(date +%s)
+    if (( $A < $NOW ))
+    then
+        if (( $NOW < $B ))
+        then
+            sleep $(( $B - $NOW ))
+        fi
+    fi
+
+    exit 0 # in any case, no true siesta here, at most just waiting
+    
 else
     "$0" -test
     exit $?
