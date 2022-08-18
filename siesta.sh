@@ -82,6 +82,31 @@ then
 
     exit 0 # in any case, no true siesta here, at most just waiting
     
+elif [[ ($# -eq 2)  &&  ($1 == "-waitto") ]]
+     # -waitto <date_to>
+     #
+     # *wait* til <date_to>
+     # 
+     # Example:
+     # -waitto 17:00
+     #
+     # we don't do any true siesta, we just wait using
+     # the... "sleep" command.
+then
+    NOW=$(date +%s)
+    B=$(date +%s -d "today $2")
+    if (( $B < $NOW ))
+    then
+        B=$(date +%s -d "tomorrow $3")
+    fi
+    
+    if (( $NOW < $B ))
+    then
+        sleep $(( $B - $NOW ))
+    fi
+    
+    exit 0 # in any case, no true siesta here, at most just waiting
+    
 else
     "$0" -test
     exit $?
