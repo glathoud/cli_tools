@@ -4,6 +4,7 @@ import http.server
 import os.path
 import socket
 import socketserver
+import subprocess
 import sys
 import threading
 import time
@@ -19,10 +20,11 @@ print( "About to serve HTTP at port", PORT )
 
 class CORSRequestHandler (http.server.SimpleHTTPRequestHandler):
 
-    def _set_headers( self, mimetype="text/javascript", extra_headers=[] ):
+    def _set_headers( self, extra_headers=[] ):
         self.send_response(200)
-        self.send_header('Content-type', mimetype)
         for x in extra_headers:
+            #print(x[0])
+            #print(x[1])
             self.send_header( x[ 0 ], x[ 1 ] )
             
         self.end_headers()
@@ -35,13 +37,29 @@ class CORSRequestHandler (http.server.SimpleHTTPRequestHandler):
 
             url = p[ len(FETCH): ]
 
-            self._set_headers( mimetype="text/javascript"
-                               , extra_headers=[ 'Cache-Control: no-cache, no-store' ]
-            )
-            
-            response = urllib.request.urlopen( url )
-            contents = response.read()
+            self._set_headers( extra_headers=[
 
+                [ 'Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' ],
+                [ 'Accept-Encoding', 'gzip, deflate, br' ],
+                [ 'Accept-Language', 'en-US,en;q=0.9,fr;q=0.8,de;q=0.7,fi;q=0.6,it;q=0.5' ],
+                [ 'Cache-Control', 'no-cache' ],
+                [ 'Pragma', 'no-cache' ],
+                [ 'Sec-Fetch-Dest', 'document' ],
+                [ 'Sec-Fetch-Mode', 'navigate' ],
+                [ 'Sec-Fetch-Site', 'none' ],
+                [ 'Sec-Fetch-User', '?1' ],
+                [ 'Upgrade-Insecure-Requests', '1' ],
+                [ 'User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36' ]
+            ] )
+
+            #response = urllib.request.urlopen( url )
+            #contents = response.read()
+
+            r = subprocess.run(["curl", "--http2", url], stdout=subprocess.PIPE)
+            contents = r.stdout if r.returncode == 0 else '__failed:r.returncode:' + r.returncode + '__'
+            
+            print( "contents loaded, beginning: ", contents[0:min(len(contents),100)])
+            
             return self.wfile.write( contents )
         
         return http.server.SimpleHTTPRequestHandler.do_GET( self )
