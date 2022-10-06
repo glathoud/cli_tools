@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 
-eval `ssh-agent -s`
-ssh-add
+# Usage:
+# eval `mysshadd.sh`
+
+echo 'eval `ssh-agent -s`'
+echo 'ssh-add'
