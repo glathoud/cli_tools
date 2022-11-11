@@ -23,20 +23,22 @@ IN_FN="$1"
 HEAD="${IN_FN%.*}"
 TAIL="${IN_FN##*.}"
 
+CRF="28"
+
 if [[ ! -f "$IN_FN" ]]
 then
     echo "$ME: could not find IN_FN: \"$IN_FN\""
     exit 1
 fi
 
-opt=( -vcodec libx265 -crf 28 )
+opt=( -vcodec libx265 -crf "$CRF" )
 if [[ "$2" == "-half" ]]
 then
     opt=(  -vf "scale=trunc(iw/4)*2:trunc(ih/4)*2"  "${opt[@]}" )
     HEAD="${HEAD}_half"
 fi
 
-HEAD="${HEAD}_x265"
+HEAD="${HEAD}_x265_crf${CRF}"
 
 OUT_FN="${HEAD}.${TAIL}"
 
