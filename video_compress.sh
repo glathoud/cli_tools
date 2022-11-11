@@ -47,5 +47,5 @@ then
     echo "$ME: output already exists: OUT_FN:\"$OUT_FN\""
     exit 2
 else
-    ffmpeg -i" $IN_FN" "${opt[@]}" "$OUT_FN"
+    ffmpeg -i "$IN_FN" "${opt[@]}" "$OUT_FN"
 fi
