@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# approximative match
+#
+# Guillaume Lathoud, 2022
+# glat@glat.info
+#
+# The Boost License applies, see file ./LICENSE
+
+if [[ "$#" != 2 ]] && [[ "$#" != 3 ]]; then
+    >&2 echo "Usage: $(basename $0) '*.js' 'someStringToSearch' [-#]"
+    >&2 echo "The optional [-#] select records that have at most # errors (from 0 to 9)"
+    exit 2
+fi
+
+if [ "$3" ]; then
+    APPROX="$3"
+else
+    APPROX="-3" # default
+fi
+
+find -L . -name "$1" -type f -exec tre-agrep "$APPROX" -iHn "$2" {} \;
