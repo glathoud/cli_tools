@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-find -L . -name "$1" -type f -exec grep -Hn "$2" {} \;
+find -L . -name "$1" -type f -exec grep -Hn -E "$2" {} \;
