@@ -8,7 +8,7 @@ then
     zenity --info --text="$MSG"
 elif [ "$(which xmessage)" ]
 then
-    xmessage "$MSG"
+    xmessage -center "$MSG"
 else
     echo "$MSG"
 fi
