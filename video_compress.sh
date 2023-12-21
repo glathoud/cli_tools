@@ -22,7 +22,7 @@ ME="$(basename $0)"
 IN_FN="$1"
 
 # output in the current directory
-HEAD="$(basename ${IN_FN%.*})"
+HEAD=$(basename "${IN_FN%.*}")
 #TAIL="${IN_FN##*.}"  # keep format
 TAIL="mp4"  # convert to MP4
 
