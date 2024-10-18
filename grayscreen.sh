@@ -3,10 +3,11 @@
 # inspired from https://unix.stackexchange.com/questions/729772/xrandr-change-saturation-less-color-more-black-white
 
 if [ ! $1 ]; then
-    echo "example parameter: HDMI-1  or  eDP-1"
+    echo "example parameter: HDMI-1  or  eDP-1  or  VGA-1"
     echo "...which we do right away, by default"
     "$0" "HDMI-1"
     "$0" "eDP-1"
+    "$0" "VGA-1"
     exit 0
 fi
 
