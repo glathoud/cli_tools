@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+paste -sd$1 | bc -l
