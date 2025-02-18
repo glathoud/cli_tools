@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+AAA=$(echo 'octave -q --eval "disp(median(['
+paste -sd, 
+echo ']))"'
+)
+
+#echo $AAA
+eval "$AAA"
