@@ -1,3 +1,23 @@
 #!/usr/bin/env bash
 
-paste -sd$1 | bc -l
+# Fold a series of numbers (typically one per line)
+# into a result. Example:
+#
+# (echo "1.234"; echo "5.454"; echo "-7" ) | linefold +
+# # -0.3120
+#
+# (echo "1.234"; echo "5.454"; echo "-7" ) | linefold -
+# # 2.7800
+#
+# Similar to LIPS's operator: (- 1.234 5.454 -7)
+#
+# See also: linesum linesub lineprod linediv 
+#
+# Guillaume Lathoud, 2025
+# The Boost License applies, as described in file ./LICENSE
+
+
+# implementation
+# bc -l does not accept expressions like "1 + -2"
+# octave does
+paste -sdQ | (AA=$(sed "s/Q/ $1 /g"); octave -q --eval "disp($AA)" )

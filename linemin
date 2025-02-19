@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Divide numbers, typically one per line.
-# Similar to LIPS's operator: (/ 1.234 5.454 -7)
+# Compute the minimum of a series of numbers, typically one per line.
 #
 # Guillaume Lathoud, 2024
 # The Boost License applies, as described in file ./LICENSE
 
-linefold '/'
+lineoctave min

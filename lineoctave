@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Apply an octave command to a vector of numbers, typically one per
+# line.
+#
+# Examples of use:
+# linemin linemax linemean linemedian
+#
+# Guillaume Lathoud, 2024
+# The Boost License applies, as described in file ./LICENSE
+
+O_CMD="$1"
+
+AAA=$(echo 'octave -q --eval "disp(' "$O_CMD" '(['
+paste -sd, 
+echo ']))"'
+)
+
+#echo $AAA
+eval "$AAA"

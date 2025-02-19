@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-AAA=$(echo 'octave -q --eval "disp(median(['
-paste -sd, 
-echo ']))"'
-)
+# Compute the median of a series of numbers, typically one per line.
+#
+# Guillaume Lathoud, 2024
+# The Boost License applies, as described in file ./LICENSE
 
-#echo $AAA
-eval "$AAA"
+lineoctave median
