@@ -16,13 +16,18 @@ msg()
 
 i=0
 while true
-do
-    msg "i:$i\nzero-seven!" &
+do   
+    msg "i:$i\nzero!" &
+
+    sleep $(( (21)*60 ))
     
-    sleep $(( (7+21)*60 ))
-    
-    msg "i:$i\ntwenty-eight!" &
+    msg "i:$i\ntwenty-one!" &
     
     sleep $(( (21)*60 ))
+
+    msg "i:$i\nforty-two - forty-nine!" &
+
+    sleep $(( (7)*60 ))
+    
     i=$(( $i+1 ))
 done
