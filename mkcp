@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+TARGETDIR=${@: -1}
+if [ ! -d "$TARGETDIR" ]
+then
+  mkdir -p "$TARGETDIR"
+fi
+
+cp "$@"

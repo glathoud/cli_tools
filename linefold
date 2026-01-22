@@ -20,4 +20,4 @@
 # implementation
 # bc -l does not accept expressions like "1 + -2"
 # octave does
-paste -sdQ | (AA=$(sed "s/Q/ $1 /g"); octave -q --eval "disp($AA)" )
+paste -sdQ | (AA=$(sed "s/Q/ $1 /g"); if [ "$AA" == "" ]; then echo "<empty data>"; else octave -q --eval "disp(sprintf('%.7f',$AA))" | sed -E 's/0+([^0-9\.]|$)/\1/g'; fi )
