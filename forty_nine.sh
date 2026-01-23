@@ -17,7 +17,7 @@ msg()
 s_rnd()
 {
     OUT=""
-    for i in {2..104}
+    for i in {2..108}
     do
         if [[ 0 == $(( $i % 5)) ]]
         then
