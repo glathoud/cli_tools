@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+CURRENT=`gbsc`
+OTHER="$1"
+
+echo
+echo "grvc: $CURRENT , $OTHER"
+echo
+
+CMD_A=(git rev-list --count "$CURRENT..$OTHER")
+
+CMD_B=(git rev-list --count "$OTHER..$CURRENT")
+
+echo "${CMD_A[@]}"
+
+"${CMD_A[@]}"
+
+echo "${CMD_B[@]}"
+
+"${CMD_B[@]}"

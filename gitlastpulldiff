@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Look at the modifications brought by the latest pull
+# => detailed diffs
+
+CMD=( git diff $( git reflog | 'grep' -A1 pull | head -2 | cut -f 1 -d ' ' | tac | paste -sd ',' - | sed 's/,/../g' ) )
+
+echo
+echo "=======> About to run: ${CMD[@]}"
+echo
+echo
+"${CMD[@]}"
+echo
+echo
+echo "=======> Done with: ${CMD[@]}"
+
