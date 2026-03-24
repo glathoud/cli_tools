@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# To convert a file (pdf jpg) to a clearer one, e.g. to print.
+# This file is distributed under the Boost License, as described
+# in the companion file ./LICENSE
+# Guillaume Lathoud
+
 BC="$1"
 IN_FILE="$2"
 OUT_FILE="$3"
