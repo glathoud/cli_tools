@@ -23,8 +23,8 @@ IN_FN="$1"
 
 # output in the current directory
 HEAD=$(basename "${IN_FN%.*}")
-#TAIL="${IN_FN##*.}"  # keep format
-TAIL="mp4"  # convert to MP4
+#OUT_TAIL="${IN_FN##*.}"  # keep format
+OUT_TAIL="mp4"  # convert to MP4
 
 CRF="28"
 
@@ -34,16 +34,16 @@ then
     exit 1
 fi
 
-opt=( -vcodec libx265 -crf "$CRF" )
+opt=( -vcodec libx265 -crf "$CRF" -tag:v hvc1 )  # hvc1: for iPhones
 if [[ "$2" == "-half" ]]
 then
     opt=(  -vf "scale=trunc(iw/4)*2:trunc(ih/4)*2"  "${opt[@]}" )
     HEAD="${HEAD}_half"
 fi
 
-HEAD="${HEAD}_x265_crf${CRF}"
+OUT_HEAD="${HEAD}_x265_crf${CRF}"
 
-OUT_FN="${HEAD}.${TAIL}"
+OUT_FN="${OUT_HEAD}.${OUT_TAIL}"
 
 if [[ -f "$OUT_FN" ]]
 then
