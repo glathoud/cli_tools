@@ -34,7 +34,7 @@ then
     exit 1
 fi
 
-opt=( -vcodec libx265 -crf "$CRF" -tag:v hvc1 )  # hvc1: for iPhones
+opt=( -c:v libx265 -crf "${CRF}" -preset slow -c:a copy -tag:v hvc1 )  # hvc1: for iPhones
 if [[ "$2" == "-half" ]]
 then
     opt=(  -vf "scale=trunc(iw/4)*2:trunc(ih/4)*2"  "${opt[@]}" )
