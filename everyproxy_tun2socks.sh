@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 
+# Provided under the Boost License, see file ./LICENSE
+# Use at your own risk.
+
+# Requirements: tun2socks installed
+# See https://github.com/xjasonlyu/tun2socks
+
 # For a first check whether EveryProxy works at all with your computer,
 # edit /etc/environment, adding the lines below, log out, log back in.
+# check:
 # curl ifconfig.me
+# browser ip2location.com
 # etc.
 #
 # /etc/environment lines:
@@ -15,13 +23,29 @@
 #   # for socks might try: 
 #   #all_proxy="socks5://192.168.0.100:1080"
 #   #ALL_PROXY="socks5://192.168.0.100:1080"
-
-
+#
+# Now the goal of the present script is (1) to precisely replace
+# that cumbersome manoeuver above, with a direct command-line, and
+# (2) to use EveryProxy in SOCKS5 mode seamlessly.
+#
+# Usage:
+# 
+# everyproxy_tun2socks.sh
+#
+# Normally EveryProxy's IP is directly recognized. If not, try
+# passing it as first argument.
+#
+# Especially if the activated EveryProxy SOCKS5 shows several IPs,
+# sometimes the the ping-based IP resolution below may give a
+# non-192.168... IP - if that leads to issues try manually typing in
+# the 192.168... one, e.g.:
+# 
+# everyproxy_tun2socks.sh 192.168.0.100
 
 set -eu
 #set -euo pipefail
 
-set -v
+#set -v
 
 # ---------- Prepare
 
