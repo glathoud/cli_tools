@@ -47,6 +47,11 @@ set -eu
 
 #set -v
 
+if [[ "root" != $(whoami) ]]; then
+    CODE=$(sudo "$0" "$@")
+    exit $CODE
+fi
+
 # ---------- Prepare
 
 PHONE_IP=""
@@ -88,25 +93,25 @@ setup () {
     set -x
 
     # Create TUN interface
-    sudo ip tuntap add mode tun dev tun0
-    sudo ip addr add 198.18.0.1/15 dev tun0
-    sudo ip link set dev tun0 up
+    ip tuntap add mode tun dev tun0
+    ip addr add 198.18.0.1/15 dev tun0
+    ip link set dev tun0 up
 
     # Protect proxy traffic from looping
     # In any case, with or without "via", keep it consistent with the corresponding cleanup below
-    #sudo ip route add "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
-    sudo ip route add "$PHONE_IP" dev "$INTERFACE_NAME"
+    #ip route add "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
+    ip route add "$PHONE_IP" dev "$INTERFACE_NAME"
 
     # Route all traffic through tun0
-    sudo ip route add 0.0.0.0/1 dev tun0
-    sudo ip route add 128.0.0.0/1 dev tun0
+    ip route add 0.0.0.0/1 dev tun0
+    ip route add 128.0.0.0/1 dev tun0
 
     # Update DNS to use the virtual DNS pool (prevents leaks)
     # Probably not needed it you already have your own custom /etc/resolv.conf
-    #xxx sudo cp "$RESOLV_CONF" "$RC_SAVE"
-    #xxx sudo sh -c "echo nameserver 198.18.0.1 > ${RESOLV_CONF}"
+    #xxx cp "$RESOLV_CONF" "$RC_SAVE"
+    #xxx sh -c "echo nameserver 198.18.0.1 > ${RESOLV_CONF}"
     #or
-    #xxx sudo sh -c "echo nameserver 8.8.8.8 > ${RESOLV_CONF}"
+    #xxx sh -c "echo nameserver 8.8.8.8 > ${RESOLV_CONF}"
         
     set +x
     echo "setup ends"
@@ -118,20 +123,20 @@ cleanup () {
     
     set +eu # make sure all run through - but frankly everything MUST work - in the worst case, reboot your computer
 
-    sudo ip route del 0.0.0.0/1 dev tun0
-    sudo ip route del 128.0.0.0/1 dev tun0
+    ip route del 0.0.0.0/1 dev tun0
+    ip route del 128.0.0.0/1 dev tun0
 
     # Be consistent with the corresponding line in setup() above
-    #sudo ip route del "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
-    sudo ip route del "$PHONE_IP" dev "$INTERFACE_NAME"
+    #ip route del "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
+    ip route del "$PHONE_IP" dev "$INTERFACE_NAME"
 
     # Be consistent with the corresponding line in setup() above
     # Restore original DNS (replace with your actual DNS servers)
-    #xxx sudo mv "$RC_SAVE" "$RESOLV_CONF"
+    #xxx mv "$RC_SAVE" "$RESOLV_CONF"
     
     # Remove TUN interface
-    sudo ip link set dev tun0 down
-    sudo ip tuntap del dev tun0 mode tun
+    ip link set dev tun0 down
+    ip tuntap del dev tun0 mode tun
 
     set +x
     echo "cleanup ends"
@@ -141,6 +146,6 @@ trap cleanup EXIT
 
 setup
 
-sudo tun2socks --device tun0 --proxy socks5://${PHONE_IP}:1080
+tun2socks --device tun0 --proxy socks5://${PHONE_IP}:1080
 
 echo "$0 done"
