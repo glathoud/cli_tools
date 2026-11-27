@@ -111,6 +111,9 @@ setup () {
     #ip route add "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
     ip route add "$PHONE_IP" dev "$INTERFACE_NAME"
 
+    # Exclude loopback traffic from tun0
+    ip route add 127.0.0.0/8 dev lo
+    
     # Route all traffic through tun0
     ip route add 0.0.0.0/1 dev tun0
     ip route add 128.0.0.0/1 dev tun0
@@ -135,6 +138,8 @@ cleanup () {
     ip route del 0.0.0.0/1 dev tun0
     ip route del 128.0.0.0/1 dev tun0
 
+    ip route add 127.0.0.0/8 dev lo
+    
     # Be consistent with the corresponding line in setup() above
     #ip route del "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
     ip route del "$PHONE_IP" dev "$INTERFACE_NAME"
