@@ -138,7 +138,7 @@ cleanup () {
     ip route del 0.0.0.0/1 dev tun0
     ip route del 128.0.0.0/1 dev tun0
 
-    ip route add 127.0.0.0/8 dev lo
+    ip route del 127.0.0.0/8 dev lo
     
     # Be consistent with the corresponding line in setup() above
     #ip route del "$PHONE_IP" via "$GATEWAY_IP" dev "$INTERFACE_NAME"
