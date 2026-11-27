@@ -47,11 +47,6 @@ set -eu
 
 #set -v
 
-if [[ "root" != $(whoami) ]]; then
-    CODE=$(sudo "$0" "$@")
-    exit $CODE
-fi
-
 # ---------- Prepare
 
 PHONE_IP=""
@@ -61,11 +56,16 @@ if [ $# -gt 0 ]; then
 fi
 if [ -z "$PHONE_IP" ]; then
     echo "bbb"
-    PHONE_IP=$(ping -c1 -W1 every-proxy.local | head -1 | awk -F'[()]' '{print $2}')
-    echo "bbb2 $?"
+    PING_IP=$(ping -c1 -W1 every-proxy.local | head -1 | awk -F'[()]' '{print $2}')
+    if [[ "$PING_IP" == "192.168."* ]]; then
+        PHONE_IP="$PING_IP"
+    fi
+fi
+if [ -z "$PHONE_IP" ]; then
+    PHONE_IP="192.168.0.100"
+    echo "ccc default PHONE_IP"
 fi
 echo "PHONE_IP: $PHONE_IP"
-if [ -z "$PHONE_IP" ]; then exit 1; fi
 
 S_DFLT=$(ip route | grep default)
 echo "S_DFLT: $S_DFLT"
@@ -79,12 +79,21 @@ echo "INTERFACE_NAME: $INTERFACE_NAME"
 if [ -z "$GATEWAY_IP" ]; then exit 3; fi
 if [ -z "$INTERFACE_NAME" ]; then exit 4; fi
 
-RESOLV_CONF="/etc/resolv.conf"
-echo "RESOLV_CONF: $RESOLV_CONF"
-if [ ! -f "$RESOLV_CONF" ]; then exit 5; fi
-RC_SAVE="${RESOLV_CONF}.save.$(date +%s.%N)"
-echo "RC_SAVE: $RC_SAVE"
-if [ -f "$RC_SAVE" ]; then exit 6; fi
+#not needed it you already have your own custom /etc/resolv.conf
+# (see also further below)
+#xxx RESOLV_CONF="/etc/resolv.conf"
+#xxx echo "RESOLV_CONF: $RESOLV_CONF"
+#xxx if [ ! -f "$RESOLV_CONF" ]; then exit 5; fi
+#xxx RC_SAVE="${RESOLV_CONF}.save.$(date +%s.%N)"
+#xxx echo "RC_SAVE: $RC_SAVE"
+#xxx if [ -f "$RC_SAVE" ]; then exit 6; fi
+
+# ---------- Put here only so that we see the verbosity above
+
+if [[ "root" != $(whoami) ]]; then
+    CODE=$(sudo "$0" "$@")
+    exit $CODE
+fi
 
 # ---------- Setup
 
